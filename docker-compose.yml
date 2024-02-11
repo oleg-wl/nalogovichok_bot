@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  nalogovichokbot:
+    container_name: taxbot
+    volumes:
+      - .:/app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+
+  clickhouse-server:
+    image: clickhouse/clickhouse-server
+    container_name: clickhouse-server
+    ports:
+      - "18123:8123"
+      - "19000:9000"
+      - "9009:9009"
+    environment:
+      - CLICKHOUSE_CONFIG_FILE=/etc/clickhouse-server/config.xml
