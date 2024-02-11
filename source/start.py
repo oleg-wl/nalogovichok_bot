@@ -1,4 +1,4 @@
-from telegram import Update, ReplyKeyboardRemove
+from telegram import Update
 
 from telegram.ext import (
     ContextTypes,
@@ -25,9 +25,8 @@ class Start:
         await context.bot.send_message(
             chat_id=uid,
             text=f"Привет {uname}, я бот Налоговичок.\nЯ могу рассказать тебе про налоговые вычеты и как их получить\nО чем ты хочешь узнать? \nили /count чтобы посчитать вычет",
-            reply_markup=ReplyKeyboardRemove
+            reply_markup=Keyboard.kb
         )
-        await context.bot.edit_message_reply_markup(chat_id=uid, message_id=msg_id, reply_markup=Keyboard.kb)
 
         return self.CHOOSE
 

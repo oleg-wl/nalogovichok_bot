@@ -11,4 +11,4 @@ COPY . /app
 
 RUN pipenv install --deploy --ignore-pipfile
 
-CMD ["pipenv" , "run", "python", "app.py", "-d"]
+CMD ["pipenv" , "run", "python", "app.py"]
