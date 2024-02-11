@@ -6,11 +6,12 @@ name = "pypi"
 [packages]
 python-telegram-bot = "*"
 click = "*"
-sqlalchemy = "*"
 art = "*"
 python-dotenv = "*"
+clickhouse-connect = "*"
 
 [dev-packages]
+ipython = "*"
 
 [requires]
 python_version = "3.11"
