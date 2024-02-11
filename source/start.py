@@ -1,3 +1,4 @@
+import datetime
 from telegram import Update
 
 from telegram.ext import (
@@ -7,8 +8,10 @@ from telegram.ext import (
     CallbackQueryHandler,
 )
 
+from database.database import Client
 from utils.keyboards import Keyboard
 
+clickhouse = Client()
 
 class Start:
 
@@ -20,8 +23,11 @@ class Start:
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         uid = update.effective_chat.id
         uname = update.effective_chat.username
-        msg_id = update.message.message_id 
+        fname = update.effective_chat.first_name
+        now = datetime.datetime.now()
 
+        clickhouse.add_new_user(chat_id=uid, username=uname, firstname=fname, logged=now)
+        
         await context.bot.send_message(
             chat_id=uid,
             text=f"Привет {uname}, я бот Налоговичок.\nЯ могу рассказать тебе про налоговые вычеты и как их получить\nО чем ты хочешь узнать? \nили /count чтобы посчитать вычет",

@@ -8,6 +8,8 @@ import click
 from source.main import main
 from dotenv import load_dotenv
 
+from database.database import Client
+
 @click.command()
 @click.option('-d/-p', default=False, help='Set logger and api key to dev')
 def app(d):
@@ -27,6 +29,7 @@ def app(d):
     logging.getLogger("httpx").setLevel(level=logging.ERROR)
     logging.getLogger("httpcore").setLevel(level=logging.ERROR)
 
+    cl = Client().init_db()
     main(token=token)
 
 if __name__ == "__main__":
