@@ -1,3 +1,4 @@
+import datetime
 from telegram import Update
 
 from telegram.ext import (
@@ -7,9 +8,10 @@ from telegram.ext import (
     CallbackQueryHandler,
 )
 
+from database.db import Database
 from utils.keyboards import Keyboard
 
-
+db = Database()
 class Start:
 
     CHOOSE, BACK = range(2)
@@ -20,8 +22,11 @@ class Start:
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         uid = update.effective_chat.id
         uname = update.effective_chat.username
-        msg_id = update.message.message_id 
+        fname = update.effective_chat.first_name
+        now = datetime.datetime.now()
 
+        db._create_user(chat_id=uid, username=uname, firstname=fname, created_at=now)
+        
         await context.bot.send_message(
             chat_id=uid,
             text=f"Привет {uname}, я бот Налоговичок.\nЯ могу рассказать тебе про налоговые вычеты и как их получить\nО чем ты хочешь узнать? \nили /count чтобы посчитать вычет",

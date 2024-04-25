@@ -5,6 +5,7 @@ import os
 import logging
 import click
 
+from database.db import Database
 from source.main import main
 from dotenv import load_dotenv
 
@@ -27,6 +28,7 @@ def app(d):
     logging.getLogger("httpx").setLevel(level=logging.ERROR)
     logging.getLogger("httpcore").setLevel(level=logging.ERROR)
 
+    Database()._init_db()
     main(token=token)
 
 if __name__ == "__main__":
