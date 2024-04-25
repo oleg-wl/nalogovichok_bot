@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, text, select
-from sqlalchemy.orm import Session, sessionmaker
-
+from sqlalchemy.orm import Session
 from .schema import User
 
 class Database():

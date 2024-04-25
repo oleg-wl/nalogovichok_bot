@@ -15,7 +15,7 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'taxbot_users'
 
-    id: Mapped[str] = mapped_column('id', String(36), insert_default=str(uuid.uuid4()), primary_key=True)
+    id: Mapped[str] = mapped_column('id', String(36), default=lambda: str(uuid.uuid4()), primary_key=True)
     chat_id: Mapped[int] = mapped_column('chat_id', Integer())
     username: Mapped[str] = mapped_column('username', String())
     firstname: Mapped[str] = mapped_column('firstname', String())
