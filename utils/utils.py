@@ -35,3 +35,25 @@ def sum_costs(costs: dict) -> dict:
     inv = inv*0.13 if inv < 400000 else 400000*0.13    
 
     return {'soc':soc, 'edu':edu, 'im':im, 'per':per, 'inv':inv}
+
+def ndfl(month: int):
+    # функция для расчета новой прогрессии НДФЛ
+
+    if isinstance(month, int):
+        gross = month * 12
+
+        gross13 = 
+        gross15 = gross13 - 2400000
+        gross18 = gross15 - 5000000
+        gross20 = gross18
+        gross22 = 50000000 - gross20
+
+        
+        if gross <= 2400000:
+            
+            tax = gross * 0.13
+            net = gross - tax
+            salary = net / 12
+            eff_tax = tax / 12
+
+        
