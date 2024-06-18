@@ -32,7 +32,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     uid = update.effective_chat.id
-    msg = f'Спасибо, что заглянул{art("heart bold")}\nПри создании бота я хотел собрать для тебя в одном месте основную информацию по личным налогам и простым языком рассказать, как получить налоговый вычет.\nНадеюсь, информация оказалась для тебя полезна и ты смог без труда получить приятный бонус в виде налогового вычета. Если есть проблемы или предложения, обязательно пиши на <a href="https://github.com/oleg-wl/nalogovichok_bot/issues">github проекта</a>.'
+    msg = f'Спасибо, что заглянул{art("heart bold")}\nПри создании бота я хотел собрать для тебя в одном месте основную информацию по личным налогам и простым языком рассказать, как получить налоговый вычет.\nНадеюсь, информация оказалась для тебя полезна и ты смог без труда получить приятный бонус в виде налогового вычета. Если есть проблемы или предложения, обязательно пиши на <a href="https://github.com/oleg-wl/nalogovichok_bot">github проекта</a>.'
 
     await context.bot.send_message(
         chat_id=uid, text=msg, parse_mode="HTML", disable_web_page_preview=False)
@@ -45,12 +45,15 @@ def main(token: str):
     start_conv = s.conversation(entry=[start_handler])
 
     start_count = CommandHandler("count", c.count)
-    count_conv = c.conversation(entry=[start_count])
+    conv_count = c.conversation(entry=[start_count])
+
+    start_ndfl = CommandHandler('ndfl')
+    conv_ndfl = n.conversation(entry=[start_ndfl])
 
     help_handler = CommandHandler("help", help)
 
     info_handler = CommandHandler("info", info)
 
-    app.add_handlers([start_conv, count_conv, help_handler, info_handler])
+    app.add_handlers([start_conv, conv_count, conv_ndfl, help_handler, info_handler])
 
     app.run_polling()
