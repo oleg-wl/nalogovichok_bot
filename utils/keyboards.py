@@ -13,7 +13,7 @@ class Keyboard:
             [
                 InlineKeyboardButton("Какие вычеты есть?", callback_data="1"),
                 InlineKeyboardButton("Как получить вычет?", callback_data="2"),
-                #InlineKeyboardButton("Рассчитать вычет", callback_data='/count')
+                InlineKeyboardButton("Посчитать новый НДФЛ", callback_data='3')
             ],
             1,
         )

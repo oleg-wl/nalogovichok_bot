@@ -36,24 +36,49 @@ def sum_costs(costs: dict) -> dict:
 
     return {'soc':soc, 'edu':edu, 'im':im, 'per':per, 'inv':inv}
 
-def ndfl(month: int):
-    # функция для расчета новой прогрессии НДФЛ
+def ndfl(month: int) -> str:
+    """
+    функция принимает месячный доход и возвращает соответтсвующий прогрессивный ндфл
+
+    :param int month: зарплата
+    :return str: сообщение ответ бота
+    """
+    def net(g: int, t: float): return g - t
 
     if isinstance(month, int):
-        gross = month * 12
+        income = month * 12 # вся зп
 
-        gross13 = 
-        gross15 = gross13 - 2400000
-        gross18 = gross15 - 5000000
-        gross20 = gross18
-        gross22 = 50000000 - gross20
+        gross13 = 2400000*0.13
+        gross15 = 2600000*0.15
+        gross18 = 15000000*0.18
+        gross20 = 30000000*0.20
 
+        if income <= 2400000:
+            tax = income * 0.13
+            net = net(income, tax)
+            rates = '13%'
+
+        elif income <= 5000000:
+            tax = gross13 + (income - 2400000) * 0.15
+            net = net(income, tax)
+            rates = '13%, 15%'
+
+        elif income <= 20000000:
+            tax = gross13 + gross15 + (income - 5000000) * 0.18
+            net = net(income, tax)
+            rates = '13%, 15%, 18%'
+
+        elif income <= 50000000:
+            tax = gross13 + gross15 + gross18 + (income - 20000000) * 0.20
+            net = net(income, tax)
+            rates = '13%, 15%, 18%, 20%'
+
+        else:
+            tax = gross13 + gross15 + gross18 + gross20 + (income - 50000000) * 0.22
+            net = net(income, tax)
+            rates = 'так я и поверил'
+
+        er = tax / income * 100
         
-        if gross <= 2400000:
-            
-            tax = gross * 0.13
-            net = gross - tax
-            salary = net / 12
-            eff_tax = tax / 12
-
-        
+        return 'Сумма НДФЛ за год: {0:,.0f}. На руки за год ты получишь: {1:,.0f}\nНалоговые ставки: {2}\nЭффективная ставка: {3}%'.format(round(tax,0), round(net,0), rates, round(er, 2)).replace(',',' ')  
+    else: return 'Введи ежемесячную зарплату без пробелов, например 2000000'

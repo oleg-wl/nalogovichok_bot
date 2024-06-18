@@ -6,15 +6,18 @@ from telegram.ext import (
     ConversationHandler,
     CommandHandler,
     CallbackQueryHandler,
+    MessageHandler,
+    filters
 )
 
 from database.db import Database
 from utils.keyboards import Keyboard
+from utils.utils import ndfl as _ndfl
 
 db = Database()
 class Start:
 
-    CHOOSE, BACK = range(2)
+    CHOOSE, BACK, NDFL = range(3)
 
     def __repr__(self) -> str:
         return "Инициализирован класс StartConv"
@@ -69,6 +72,49 @@ class Start:
         )
         return self.CHOOSE
 
+    async def ndfl(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        # вход в секцию для расчета ндфл
+        uid = update.effective_chat.id
+
+        await context.bot.send_message(
+                text="Давай посчитаем НДФЛ так если бы мы жили в 2025 году\nВведи желаемую зарплату в месяц без пробелов, например 2000000",
+                chat_id=uid,
+                reply_markup=Keyboard.bkb,
+            )
+        return self.NDFL
+
+    async def count_ndfl(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        uid = update.effective_chat.id
+        #query = update.callback_query
+        
+        income = update.message.text
+
+        #await query.answer()
+
+        try:
+            i = int(income)
+            t = _ndfl(i)
+
+            await context.bot.send_message(
+                text=t,
+                chat_id=uid,
+                reply_markup=Keyboard.bkb,
+            )
+            return self.NDFL
+
+        except ValueError:
+            await context.bot.send_message(
+                text="Введи ежемесячную зарплату без пробелов, например 2000000", chat_id=uid
+            )
+            return self.NDFL
+
+        except Exception as e:
+            await context.bot.send_message(
+                text="Прощу прощения, произошла ошибка", chat_id=uid
+            )
+            logger.exception("Error: %s", exc_info=e)
+            return ConversationHandler.END
+
     def conversation(self, entry: list[CommandHandler]) -> ConversationHandler:
 
         conversation = ConversationHandler(
@@ -77,11 +123,15 @@ class Start:
                 self.CHOOSE: [
                     CallbackQueryHandler(self.about, pattern="1"),
                     CallbackQueryHandler(self.howto, pattern="2"),
-                    #CallbackQueryHandler(Count.count, pattern='/count')
+                    CallbackQueryHandler(self.ndfl, pattern="3")
                 ],
                 self.BACK: [
                     CallbackQueryHandler(self.back, pattern="back"),
                 ],
+                self.NDFL : [
+                    MessageHandler(callback=self.count_ndfl, filters=~(filters.COMMAND)),
+                    CallbackQueryHandler(self.back, pattern="back")
+                    ]
             },
             fallbacks=entry,
         )
